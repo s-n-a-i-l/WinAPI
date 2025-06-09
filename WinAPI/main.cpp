@@ -24,7 +24,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst,LPSTR lpCmdLine, INT
 }
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
+{  
 	switch(uMsg)
 	{
 	case WM_INITDIALOG://выполняется 1 раз при запуске окна
