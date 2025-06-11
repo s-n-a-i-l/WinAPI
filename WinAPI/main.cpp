@@ -25,6 +25,40 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	return 0;
 }
 
+VOID EditPlaseholder (HWND hwnd, int editControlId, UINT eventCode, const char* placeholderText)
+{
+		HWND hEdit = GetDlgItem(hwnd, editControlId);// по айди что мен€ем
+		if (!hEdit) return;
+
+		CONST INT SIZE = 265;
+		CHAR sz_buffer[SIZE] = {};
+		GetWindowTextA(hEdit, sz_buffer, SIZE);
+
+		switch (eventCode)
+		{
+		case EN_SETFOCUS:
+		{
+			if (strcmp(sz_buffer, placeholderText) == 0)
+			{
+				SetWindowTextA(hEdit, "");
+			}
+			break;
+		}
+		case EN_KILLFOCUS:
+		{
+			//не ввЄл ничего Ч возвращаем подсказку
+			GetWindowTextA(hEdit, sz_buffer, SIZE);
+			if (strlen(sz_buffer) == 0)
+			{
+				SetWindowTextA(hEdit, placeholderText);
+			}
+			break;
+		}
+
+		}
+	
+}
+
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
    
@@ -43,70 +77,78 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_COMMAND://обрабатывает нажатие кнопок, перемещение мыши и т.д//тут надо обрабатывать курсор
 	{
-		if (LOWORD(wParam) == IDC_EDIT_LOGIN)
+		if (LOWORD(wParam) == IDC_EDIT_LOGIN || IDC_EDIT_PASSWORD)
 		{
-
-			HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
-			CONST INT SIZE = 265;
-			CHAR sz_buffer[SIZE] = {};
-
-			switch (HIWORD(wParam))
-			{
-			case EN_SETFOCUS:
-			{
-				// ”дал€ем подсказку, если она сейчас отображаетс€
-				GetWindowTextA(hEditLogin, sz_buffer, sizeof(sz_buffer));
-				if (strcmp(sz_buffer, EM_GETCUEBANNER) == 0)
-				{
-					SetWindowTextA(hEditLogin, "");
-				}
-				break;
-			}
-			case EN_KILLFOCUS:
-			{
-				// ≈сли пользователь не ввЄл ничего Ч возвращаем подсказку
-				GetWindowTextA(hEditLogin, sz_buffer, sizeof(sz_buffer));
-				if (strlen(sz_buffer) == 0)
-				{
-					SetWindowTextA(hEditLogin, EM_GETCUEBANNER);
-				}
-				break;
-			}
-
-			}
+			const char* plaseholder = (LOWORD(wParam) == IDC_EDIT_LOGIN) ? EM_GETCUEBANNER : PLACEHOLDER_TEXT;
+			EditPlaseholder(hwnd, IDC_EDIT_LOGIN, HIWORD(wParam), plaseholder);
+			EditPlaseholder(hwnd, IDC_EDIT_PASSWORD, HIWORD(wParam), plaseholder);
 		}
-		if (LOWORD(wParam) == IDC_EDIT_PASSWORD)
-		{
 
-			HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
-			CONST INT SIZE = 265;
-			CHAR sz_buffer[SIZE] = {};
 
-			switch (HIWORD(wParam))
-			{
-			case EN_SETFOCUS:
-			{
-				
-				GetWindowTextA(hEditPassword, sz_buffer, sizeof(sz_buffer));
-				if (strcmp(sz_buffer, PLACEHOLDER_TEXT) == 0)
-				{
-					SetWindowTextA(hEditPassword, "");
-				}
-				break;
-			}
-			case EN_KILLFOCUS:
-			{
-				
-				GetWindowTextA(hEditPassword, sz_buffer, sizeof(sz_buffer));
-				if (strlen(sz_buffer) == 0)
-				{
-					SetWindowTextA(hEditPassword, PLACEHOLDER_TEXT);
-				}
-				break;
-			}
+		//if (LOWORD(wParam) == IDC_EDIT_LOGIN)
+		//{
 
-			}
-		}
+		//	HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
+		//	CONST INT SIZE = 265;
+		//	CHAR sz_buffer[SIZE] = {};
+
+		//	switch (HIWORD(wParam))
+		//	{
+		//	case EN_SETFOCUS:
+		//	{
+		//		// ”дал€ем подсказку, если она сейчас отображаетс€
+		//		GetWindowTextA(hEditLogin, sz_buffer, SIZE);
+		//		if (strcmp(sz_buffer, EM_GETCUEBANNER) == 0)
+		//		{
+		//			SetWindowTextA(hEditLogin, "");
+		//		}
+		//		break;
+		//	}
+		//	case EN_KILLFOCUS:
+		//	{
+		//		//не ввЄл ничего Ч возвращаем подсказку
+		//		GetWindowTextA(hEditLogin, sz_buffer, SIZE);
+		//		if (strlen(sz_buffer) == 0)
+		//		{
+		//			SetWindowTextA(hEditLogin, EM_GETCUEBANNER);
+		//		}
+		//		break;
+		//	}
+
+		//	}
+		//}
+		//if (LOWORD(wParam) == IDC_EDIT_PASSWORD)
+		//{
+
+		//	HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
+		//	CONST INT SIZE = 265;
+		//	CHAR sz_buffer[SIZE] = {};
+
+		//	switch (HIWORD(wParam))
+		//	{
+		//	case EN_SETFOCUS:
+		//	{
+		//		
+		//		GetWindowTextA(hEditPassword, sz_buffer, SIZE);
+		//		if (strcmp(sz_buffer, PLACEHOLDER_TEXT) == 0)
+		//		{
+		//			SetWindowTextA(hEditPassword, "");
+		//		}
+		//		break;
+		//	}
+		//	case EN_KILLFOCUS:
+		//	{
+		//		
+		//		GetWindowTextA(hEditPassword, sz_buffer, SIZE);
+		//		if (strlen(sz_buffer) == 0)
+		//		{
+		//			SetWindowTextA(hEditPassword, PLACEHOLDER_TEXT);
+		//		}
+		//		break;
+		//	}
+
+		//	}
+		//}
 	}
 		switch (LOWORD(wParam))
 		{
