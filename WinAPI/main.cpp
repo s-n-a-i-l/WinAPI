@@ -23,56 +23,56 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	DialogBoxParam(hInstance, MAKEINTRESOURCEA(IDD_DIALOG1), NULL, (DLGPROC)DlgProc, 0);
 
 	return 0;
-}
-
-VOID EditPlaseholder (HWND hwnd, int editControlId, UINT eventCode, const char* placeholderText)
+}                                                    //код ивента
+					   //им€ пол€    //ID элемента  //HIWORD(wParam)     //константна€ с текстом
+VOID EditPlaseholder(HWND hwnd, int editControlId, UINT eventCode, const char* placeholderText)
 {
-		HWND hEdit = GetDlgItem(hwnd, editControlId);// по айди что мен€ем
-		if (!hEdit) return;
+	HWND hEdit = GetDlgItem(hwnd, editControlId);// по айди что мен€ем
+	if (!hEdit) return;
 
-		CONST INT SIZE = 265;
-		CHAR sz_buffer[SIZE] = {};
+	CONST INT SIZE = 265;
+	CHAR sz_buffer[SIZE] = {};
+	GetWindowTextA(hEdit, sz_buffer, SIZE);
+
+	switch (eventCode)
+	{
+	case EN_SETFOCUS:
+	{
+		if (strcmp(sz_buffer, placeholderText) == 0)
+		{
+			SetWindowTextA(hEdit, "");
+		}
+		break;
+	}
+	case EN_KILLFOCUS:
+	{
+		//не ввЄл ничего Ч возвращаем подсказку
 		GetWindowTextA(hEdit, sz_buffer, SIZE);
+		if (strlen(sz_buffer) == 0)
+		{
+			SetWindowTextA(hEdit, placeholderText);
+		}
+		break;
+	}
 
-		switch (eventCode)
-		{
-		case EN_SETFOCUS:
-		{
-			if (strcmp(sz_buffer, placeholderText) == 0)
-			{
-				SetWindowTextA(hEdit, "");
-			}
-			break;
-		}
-		case EN_KILLFOCUS:
-		{
-			//не ввЄл ничего Ч возвращаем подсказку
-			GetWindowTextA(hEdit, sz_buffer, SIZE);
-			if (strlen(sz_buffer) == 0)
-			{
-				SetWindowTextA(hEdit, placeholderText);
-			}
-			break;
-		}
+	}
 
-		}
-	
 }
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-   
+
 	switch (uMsg)
 	{
 	case WM_INITDIALOG://выполн€етс€ 1 раз при запуске окна
 	{
-        #define  EM_GETCUEBANNER "¬ведите Ћогин"
-        #define  PLACEHOLDER_TEXT "¬ведите ѕароль"
+#define  EM_GETCUEBANNER "¬ведите Ћогин"
+#define  PLACEHOLDER_TEXT "¬ведите ѕароль"
 		HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
 		SetWindowTextA(hEditLogin, EM_GETCUEBANNER);//if A(char*) else W(WCHAR_T*)
 		HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
 		SetWindowTextA(hEditPassword, PLACEHOLDER_TEXT);
-		
+
 		break;
 	}
 	case WM_COMMAND://обрабатывает нажатие кнопок, перемещение мыши и т.д//тут надо обрабатывать курсор
@@ -84,97 +84,99 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			EditPlaseholder(hwnd, IDC_EDIT_PASSWORD, HIWORD(wParam), plaseholder);
 		}
 
-
+#if TWOIFS
 		//if (LOWORD(wParam) == IDC_EDIT_LOGIN)
-		//{
+//{
 
-		//	HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
-		//	CONST INT SIZE = 265;
-		//	CHAR sz_buffer[SIZE] = {};
+//	HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
+//	CONST INT SIZE = 265;
+//	CHAR sz_buffer[SIZE] = {};
 
-		//	switch (HIWORD(wParam))
-		//	{
-		//	case EN_SETFOCUS:
-		//	{
-		//		// ”дал€ем подсказку, если она сейчас отображаетс€
-		//		GetWindowTextA(hEditLogin, sz_buffer, SIZE);
-		//		if (strcmp(sz_buffer, EM_GETCUEBANNER) == 0)
-		//		{
-		//			SetWindowTextA(hEditLogin, "");
-		//		}
-		//		break;
-		//	}
-		//	case EN_KILLFOCUS:
-		//	{
-		//		//не ввЄл ничего Ч возвращаем подсказку
-		//		GetWindowTextA(hEditLogin, sz_buffer, SIZE);
-		//		if (strlen(sz_buffer) == 0)
-		//		{
-		//			SetWindowTextA(hEditLogin, EM_GETCUEBANNER);
-		//		}
-		//		break;
-		//	}
+//	switch (HIWORD(wParam))
+//	{
+//	case EN_SETFOCUS:
+//	{
+//		// ”дал€ем подсказку, если она сейчас отображаетс€
+//		GetWindowTextA(hEditLogin, sz_buffer, SIZE);
+//		if (strcmp(sz_buffer, EM_GETCUEBANNER) == 0)
+//		{
+//			SetWindowTextA(hEditLogin, "");
+//		}
+//		break;
+//	}
+//	case EN_KILLFOCUS:
+//	{
+//		//не ввЄл ничего Ч возвращаем подсказку
+//		GetWindowTextA(hEditLogin, sz_buffer, SIZE);
+//		if (strlen(sz_buffer) == 0)
+//		{
+//			SetWindowTextA(hEditLogin, EM_GETCUEBANNER);
+//		}
+//		break;
+//	}
 
-		//	}
-		//}
-		//if (LOWORD(wParam) == IDC_EDIT_PASSWORD)
-		//{
+//	}
+//}
+//if (LOWORD(wParam) == IDC_EDIT_PASSWORD)
+//{
 
-		//	HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
-		//	CONST INT SIZE = 265;
-		//	CHAR sz_buffer[SIZE] = {};
+//	HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
+//	CONST INT SIZE = 265;
+//	CHAR sz_buffer[SIZE] = {};
 
-		//	switch (HIWORD(wParam))
-		//	{
-		//	case EN_SETFOCUS:
-		//	{
-		//		
-		//		GetWindowTextA(hEditPassword, sz_buffer, SIZE);
-		//		if (strcmp(sz_buffer, PLACEHOLDER_TEXT) == 0)
-		//		{
-		//			SetWindowTextA(hEditPassword, "");
-		//		}
-		//		break;
-		//	}
-		//	case EN_KILLFOCUS:
-		//	{
-		//		
-		//		GetWindowTextA(hEditPassword, sz_buffer, SIZE);
-		//		if (strlen(sz_buffer) == 0)
-		//		{
-		//			SetWindowTextA(hEditPassword, PLACEHOLDER_TEXT);
-		//		}
-		//		break;
-		//	}
+//	switch (HIWORD(wParam))
+//	{
+//	case EN_SETFOCUS:
+//	{
+//		
+//		GetWindowTextA(hEditPassword, sz_buffer, SIZE);
+//		if (strcmp(sz_buffer, PLACEHOLDER_TEXT) == 0)
+//		{
+//			SetWindowTextA(hEditPassword, "");
+//		}
+//		break;
+//	}
+//	case EN_KILLFOCUS:
+//	{
+//		
+//		GetWindowTextA(hEditPassword, sz_buffer, SIZE);
+//		if (strlen(sz_buffer) == 0)
+//		{
+//			SetWindowTextA(hEditPassword, PLACEHOLDER_TEXT);
+//		}
+//		break;
+//	}
 
-		//	}
-		//}
+//	}
+//} 
+#endif // TWOIFS
+
 	}
-		switch (LOWORD(wParam))
-		{
-		case IDC_BUTTON_COPY:
-		{
-			HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
-			HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
-			CONST INT SIZE = 265;
-			CHAR sz_buffer[SIZE] = {};
-			SendMessage(hEditLogin, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
-			SendMessage(hEditPassword, WM_SETTEXT, 0, (LPARAM)sz_buffer);
-		}
+	switch (LOWORD(wParam))
+	{
+	case IDC_BUTTON_COPY:
+	{
+		HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
+		HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
+		CONST INT SIZE = 265;
+		CHAR sz_buffer[SIZE] = {};
+		SendMessage(hEditLogin, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+		SendMessage(hEditPassword, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+	}
+	break;
+	case IDOK: MessageBox(hwnd, "Ѕыла нажата кнопка 'ok'", "Info", MB_OK | MB_ICONINFORMATION); break;
+	case IDCANCEL:
+		EndDialog(hwnd, 0);
 		break;
-		case IDOK: MessageBox(hwnd, "Ѕыла нажата кнопка 'ok'", "Info", MB_OK | MB_ICONINFORMATION); break;
-		case IDCANCEL:
-			EndDialog(hwnd, 0);
-			break;
 
-			break;
+		break;
 
-		case WM_CLOSE:/*отрабатывает при нажатии на кнопку закрыть*/
+	case WM_CLOSE:/*отрабатывает при нажатии на кнопку закрыть*/
 
-			EndDialog(hwnd, 0);
-			break;
-		}
+		EndDialog(hwnd, 0);
+		break;
 	}
-	
+	}
+
 	return FALSE;
-	}
+}
