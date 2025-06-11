@@ -3,7 +3,7 @@
 
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-bool isСlueShown = true;// глобал флаг на подсказку внутри поля
+
 
 //#define MESSAGE_BOX
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
@@ -32,16 +32,20 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_INITDIALOG://выполняется 1 раз при запуске окна
 	{
-#define  EM_GETCUEBANNER "Введите Логин"
+        #define  EM_GETCUEBANNER "Введите Логин"
+        #define  PLACEHOLDER_TEXT "Введите Пароль"
 		HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
 		SetWindowTextA(hEditLogin, EM_GETCUEBANNER);//if A(char*) else W(WCHAR_T*)
-
+		HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
+		SetWindowTextA(hEditPassword, PLACEHOLDER_TEXT);
+		
 		break;
 	}
 	case WM_COMMAND://обрабатывает нажатие кнопок, перемещение мыши и т.д//тут надо обрабатывать курсор
 	{
 		if (LOWORD(wParam) == IDC_EDIT_LOGIN)
 		{
+
 			HWND hEditLogin = GetDlgItem(hwnd, IDC_EDIT_LOGIN);
 			CONST INT SIZE = 265;
 			CHAR sz_buffer[SIZE] = {};
@@ -65,6 +69,38 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				if (strlen(sz_buffer) == 0)
 				{
 					SetWindowTextA(hEditLogin, EM_GETCUEBANNER);
+				}
+				break;
+			}
+
+			}
+		}
+		if (LOWORD(wParam) == IDC_EDIT_PASSWORD)
+		{
+
+			HWND hEditPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
+			CONST INT SIZE = 265;
+			CHAR sz_buffer[SIZE] = {};
+
+			switch (HIWORD(wParam))
+			{
+			case EN_SETFOCUS:
+			{
+				
+				GetWindowTextA(hEditPassword, sz_buffer, sizeof(sz_buffer));
+				if (strcmp(sz_buffer, PLACEHOLDER_TEXT) == 0)
+				{
+					SetWindowTextA(hEditPassword, "");
+				}
+				break;
+			}
+			case EN_KILLFOCUS:
+			{
+				
+				GetWindowTextA(hEditPassword, sz_buffer, sizeof(sz_buffer));
+				if (strlen(sz_buffer) == 0)
+				{
+					SetWindowTextA(hEditPassword, PLACEHOLDER_TEXT);
 				}
 				break;
 			}
