@@ -34,6 +34,10 @@ BOOL CALLBACK EditDlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_INITDIALOG:
 	{
+		HICON hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
+		//GetModulHandle(NULL) возвращает hInstanse нашего ехе файла
+		SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon);
+
 		// записываю переданный текст в поле редактирования
 		const char* initText = (const char*)lParam;
 		SetWindowTextA(GetDlgItem(hwnd, IDC_EDIT_REDACT), initText);
@@ -79,7 +83,12 @@ BOOL CALLBACK AddDlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
+	{
+		HICON hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
+		//GetModulHandle(NULL) возвращает hInstanse нашего ехе файла
+		SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon);
 		SetFocus(GetDlgItem(hwnd, IDC_EDIT_ADD));//установить фокус курсора чтобы вводить сразу при пуске окна
+	}
 		break;
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
